@@ -1,0 +1,13 @@
+logging:
+  level:
+    org:
+      springframework: ERROR
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+    remote:
+      secret: somesecret
+      debug:
+        local-port: 8010
