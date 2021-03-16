@@ -14,7 +14,29 @@ class Service implements Serializable {
     String id = ""
     ServiceType serviceType
 
+    @Autowired
+    Config config
+    @Autowired
+    Auth auth
+    @Autowired
+    Auth proxyuser
 
 
+    def config(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = Config) Closure closure) {
+        closure.setDelegate(config)
+        closure.setResolveStrategy(Closure.DELEGATE_FIRST)
+        closure.call()
+    }
 
+    def auth(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = Auth) Closure closure) {
+        closure.setDelegate(auth)
+        closure.setResolveStrategy(Closure.DELEGATE_FIRST)
+        closure.call()
+    }
+
+    def proxyuser(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = Auth) Closure closure) {
+        closure.setDelegate(proxyuser)
+        closure.setResolveStrategy(Closure.DELEGATE_FIRST)
+        closure.call()
+    }
 }

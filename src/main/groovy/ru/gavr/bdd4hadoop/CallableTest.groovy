@@ -1,7 +1,7 @@
 package ru.gavr.bdd4hadoop
 
 import com.google.common.cache.LoadingCache
-
+import ru.gavr.bdd4hadoop.connectors.RunAutotestCommandConnector
 import ru.gavr.bdd4hadoop.dsl.Test
 import ru.gavr.bdd4hadoop.dsl.operations.Operation
 import ru.gavr.bdd4hadoop.dsl.services.Service
@@ -26,14 +26,6 @@ class CallableTest {
     @Autowired
     TestResult testResult
 
-    @Autowired
-    private LoadingCache<Service, DriverConnector> driverConnectorPool
-    @Autowired
-    private LoadingCache<Service, JDBCConnector> jdbcConnectorPool
-    @Autowired
-    private LoadingCache<Service, HDFSConnector> hdfsConnectorPool
-    @Autowired
-    private LoadingCache<Service, SparkConnector> sparkConnectorPool
 
     def preconditions() {
         log.info("--- Preconditions processing ---")

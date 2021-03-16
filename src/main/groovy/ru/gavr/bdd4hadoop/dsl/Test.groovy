@@ -20,7 +20,12 @@ class Test implements Serializable {
 
     @Autowired
     Services services
+    @Autowired
+    ObjectProvider<Operation> operationsObjectProvider
 
+    List<Operation> preconditionsList = new ArrayList<>()
+    List<Operation> postconditionsList = new ArrayList<>()
+    List<Operation> stepsList = new ArrayList<>()
     List<String> stepsComponents = new ArrayList<>()
 
     def groupName(String groupName) {
@@ -41,4 +46,24 @@ class Test implements Serializable {
         closure.call()
     }
 
+    def preconditions(Closure closure) {
+        addOperationsToList(closure, preconditionsList, false)
+    }
+
+    def postconditions(Closure closure) {
+        addOperationsToList(closure, postconditionsList, false)
+    }
+
+    def steps(Closure closure) {
+        addOperationsToList(closure, stepsList, true)
+    }
+
+    void addOperationsToList(Closure closure, List<Operation> operationsList, boolean isSteps) {
+        List<Closure> list = closure.call() as List<Closure>
+        list.each{
+            Operation operation = operationsObjectProvider.getObject()
+            operation.setOperation(it, isSteps)
+            operationsList.add(operation)
+        }
+    }
 }

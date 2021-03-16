@@ -1,6 +1,7 @@
 package ru.gavr.bdd4hadoop.dsl
 
 import ru.gavr.bdd4hadoop.CallableTest
+import ru.gavr.bdd4hadoop.TestsStorage
 import ru.gavr.bdd4hadoop.dsl.services.Service
 import ru.gavr.bdd4hadoop.exceptions.ServiceIdException
 import groovy.util.logging.Commons
@@ -19,7 +20,8 @@ class TestBuilder {
     ObjectFactory<Test> testObjectFactory
     @Autowired
     ObjectFactory<CallableTest> callableTestObjectFactory
-
+    @Autowired
+    TestsStorage testStorage
 
     Test templateTest
     boolean templated = false
@@ -45,6 +47,7 @@ class TestBuilder {
             callableTest.getTestResult().setResultDetails(msg)
         } finally {
             callableTest.setTest(test)
+            testStorage.tests.add(callableTest)
         }
     }
 

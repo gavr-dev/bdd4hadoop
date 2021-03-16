@@ -36,10 +36,8 @@ class Reader {
                 try {
                     def nameA = a.getName().split("\\.",2)[0].toUpperCase()
                     def nameB = b.getName().split("\\.",2)[0].toUpperCase()
-                    def aIndex = nameA.contains(TestType.SPARK_WITH_HIVE.typeName.toUpperCase()) ? 3 : 1
-                    def bIndex = nameB.contains(TestType.SPARK_WITH_HIVE.typeName.toUpperCase()) ? 3 : 1
-                    fileNumA = Integer.parseInt(nameA.split("_", )[aIndex])
-                    fileNumB = Integer.parseInt(nameB.split("_", )[bIndex])
+                    fileNumA = Integer.parseInt(nameA.split("_", )[1])
+                    fileNumB = Integer.parseInt(nameB.split("_", )[1])
                 } catch (Exception ex) {
                     log.error("Error while sorting file. Correct format is TYPE + '_' + NUMBER + '_' + NAME: " + ex.getMessage())
                 }
@@ -67,7 +65,7 @@ class Reader {
         try {
             script.run()
         }catch(Throwable t){
-
+            testBuilder.getTestStorage().getUnReadableFiles() << file
             log.error(t.getMessage(), t)
         }
     }

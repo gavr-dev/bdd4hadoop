@@ -17,6 +17,16 @@ class Services implements Serializable{
     @Autowired
     ObjectProvider<Service> serviceObjectProvider
 
+    def serviceProcessing(Closure closure, ServiceType serviceType) {
+        Service service  = serviceObjectProvider.getObject()
+        service.setServiceType(serviceType)
+        closure.setDelegate(service)
+        closure.setResolveStrategy(Closure.DELEGATE_FIRST)
+        closure.call()
 
+        serviceList.removeIf({ it.id.equals(service.id) })
+        serviceList.add(service)
+
+    }
 
 }
