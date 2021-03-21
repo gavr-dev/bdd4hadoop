@@ -1,19 +1,23 @@
 package ru.gavr.bdd4hadoop
 
 import com.google.common.cache.LoadingCache
-import ru.gavr.bdd4hadoop.connectors.RunAutotestCommandConnector
-import ru.gavr.bdd4hadoop.dsl.Test
-import ru.gavr.bdd4hadoop.dsl.operations.Operation
-import ru.gavr.bdd4hadoop.dsl.services.Service
-import ru.gavr.bdd4hadoop.enums.ServerMode
-import ru.gavr.bdd4hadoop.enums.ServiceType
-import ru.gavr.bdd4hadoop.exceptions.ActionResultException
 import groovy.transform.Canonical
 import groovy.util.logging.Commons
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
+import ru.gavr.bdd4hadoop.connectors.DriverConnector
+import ru.gavr.bdd4hadoop.connectors.JDBCConnector
+import ru.gavr.bdd4hadoop.connectors.RunAutotestCommandConnector
+import ru.gavr.bdd4hadoop.connectors.SparkConnector
+import ru.gavr.bdd4hadoop.connectors.hdfs.HDFSConnector
+import ru.gavr.bdd4hadoop.dsl.Test
+import ru.gavr.bdd4hadoop.dsl.operations.Operation
+import ru.gavr.bdd4hadoop.dsl.services.Service
+import ru.gavr.bdd4hadoop.enums.ServerMode
+import ru.gavr.bdd4hadoop.enums.ServiceType
+import ru.gavr.bdd4hadoop.exceptions.ActionResultException
 
 @Canonical
 @Component
@@ -84,18 +88,7 @@ class CallableTest {
         return connector.runQuery(operation.action)
     }
 
-    private RunAutotestCommandConnector getConnector(Service service){
-        log.debug("Run \"getConnector\" method")
-        if (service?.getServiceType()?.getServerMode() == ServerMode.JDBC) {
-            return jdbcConnectorPool.get(service)
-        }  else if (service?.getServiceType() == ServiceType.HDFS) {
-            return hdfsConnectorPool.get(service)
-        } else if (service?.getServiceType() == ServiceType.SPARK) {
-            return sparkConnectorPool.get(service)
-        } else {
-            return driverConnectorPool.get(service)
-        }
-    }
+
 
     def checkConditionResult(result, conditionName, action) {
         if (result.get(0).equals("FAILURE") && !result.get(1).equals("NO ERROR") ) {
