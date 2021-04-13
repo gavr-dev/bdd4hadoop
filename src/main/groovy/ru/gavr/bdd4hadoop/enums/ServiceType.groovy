@@ -4,6 +4,7 @@ enum ServiceType implements Serializable {
     HIVESERVER2(serverMode: ServerMode.JDBC, componentName: "HS2"),
     HIVEMETASTORE(serverMode: ServerMode.METASTORE, componentName: "HMS"),
     HDFS(serverMode: ServerMode.CLIENT, componentName: "HDFS"),
+    SPARK(serverMode: ServerMode.CLIENT, componentName: "SPARK")
 
     ServerMode serverMode
     String componentName

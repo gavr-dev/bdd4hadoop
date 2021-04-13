@@ -26,7 +26,159 @@ class KerberosConnection {
     KerberosConnection() {
     }
 
+    KerberosConnection(String principal, String keytabFile, String metaStoreUris) {
+        Configuration conf = new Configuration(true)
 
+        for (String xml : hadoopConfXMLList) {
+            conf.addResource(new HadoopPath(getRealFile(hadoopConfDir+File.separator+xml).toString()) )
+        }
+
+        keytabFile = keytabFile?:"/etc/hive.keytab"
+        principal = principal?:"hive/_HOST@REALM"
+
+        conf.set(HiveConf.ConfVars.METASTOREURIS.varname, metaStoreUris)
+        conf.set(HiveConf.ConfVars.METASTORE_USE_THRIFT_SASL.varname, "true")
+        conf.set("hive.metastore.kerberos.keytab.file", keytabFile)
+        conf.set("hive.server2.authentication.kerberos.keytab", keytabFile)
+        conf.set("hive.server2.authentication.kerberos.principal", principal)
+        conf.set("hive.metastore.kerberos.principal", principal)
+        conf.set("hadoop.security.authentication", "KERBEROS")
+        conf.set("hive.metastore.authentication", "KERBEROS")
+
+        UserGroupInformation.setConfiguration(conf)
+        def ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(SecurityUtil.getServerPrincipal(principal, "0.0.0.0"), keytabFile)
+        setUgi(ugi)
+        ugi.setLoginUser(ugi)
+        log.info("${ugi.getLoginUser()} ${ugi.getCurrentUser()} ${ugi.isSecurityEnabled()} ${ugi.isLoginKeytabBased()} ${ugi.isLoginTicketBased()}")
+        setConf(conf)
+    }
+
+    KerberosConnection(String proxyUserPrincipal,
+                       String proxyUserKeytabFile,
+                       String userPrincipal,
+                       String metaStoreUris) {
+        Configuration conf = new Configuration(true)
+
+        for (String xml : hadoopConfXMLList) {
+            conf.addResource(new HadoopPath(getRealFile(hadoopConfDir+File.separator+xml).toString()) )
+        }
+
+        proxyUserKeytabFile = proxyUserKeytabFile?:"/etc/hive.keytab"
+        proxyUserPrincipal = proxyUserPrincipal?:"hive/_HOST@REALM"
+
+        conf.set(HiveConf.ConfVars.METASTOREURIS.varname, metaStoreUris)
+        conf.set(HiveConf.ConfVars.METASTORE_USE_THRIFT_SASL.varname, "true")
+        conf.set("hive.metastore.kerberos.keytab.file", proxyUserKeytabFile)
+        conf.set("hive.server2.authentication.kerberos.keytab", proxyUserKeytabFile)
+        conf.set("hive.server2.authentication.kerberos.principal", proxyUserPrincipal)
+        conf.set("hive.metastore.kerberos.principal", proxyUserPrincipal)
+        conf.set("hadoop.security.authentication", "KERBEROS")
+        conf.set("hive.metastore.authentication", "KERBEROS")
+//        conf.set(HiveConf.ConfVars.HIVE_DDL_OUTPUT_FORMAT.varname, "json")
+
+        UserGroupInformation.setConfiguration(conf)
+        def proxyUserUgi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(SecurityUtil.getServerPrincipal(proxyUserPrincipal, "0.0.0.0"), proxyUserKeytabFile)
+        def userUgi = UserGroupInformation.createProxyUser(userPrincipal, proxyUserUgi)
+
+        setUgi(userUgi)
+        ugi.setLoginUser(userUgi)
+        log.info("${userUgi.getLoginUser()} ${userUgi.getCurrentUser()} ${userUgi.isSecurityEnabled()} ${userUgi.isLoginKeytabBased()} ${userUgi.isLoginTicketBased()}")
+        setConf(conf)
+    }
+
+
+    KerberosConnection(boolean fal) {
+        Configuration conf = new Configuration(false)
+
+        for (String xml : hadoopConfXMLList) {
+            conf.addResource(new HadoopPath(getRealFile(hadoopConfDir+File.separator+xml).toString()))
+        }
+
+        conf.set(HiveConf.ConfVars.METASTORE_USE_THRIFT_SASL.varname, "true")
+        conf.set("hadoop.security.authentication", "simple")
+        conf.set("hive.metastore.authentication", "PLAIN")
+
+        UserGroupInformation.setConfiguration(conf)
+        def ugi = UserGroupInformation.getLoginUser()
+        log.info("${ugi.getLoginUser()} ${ugi.getCurrentUser()} ${ugi.isSecurityEnabled()} ${ugi.isLoginKeytabBased()} ${ugi.isLoginTicketBased()}")
+        setUgi(ugi)
+        setConf(conf)
+    }
+
+
+    //accept config list paths for hdfs
+    KerberosConnection(List<String> configFiles, boolean loginFromKeytab) {
+        log.debug("File paths: " + configFiles )
+        Configuration conf = new Configuration(false)
+
+        configFiles.each {
+            conf.addResource(new HadoopPath(getRealFile(it).toString()))
+        }
+
+        UserGroupInformation.setConfiguration(conf)
+        def ugi = UserGroupInformation.getLoginUser()
+        setUgi(ugi)
+        log.debug("Intialized configuration for HDFS Service. Login user: ${ugi.getLoginUser()}, current user: ${ugi.getCurrentUser()}")
+        setConf(conf)
+    }
+
+    KerberosConnection(List<String> configFiles, String keytabPath) {
+        log.debug("File paths: " + configFiles )
+        Configuration conf = new Configuration(false)
+
+        configFiles.each {
+            conf.addResource(new HadoopPath(getRealFile(it).toString()))
+        }
+
+        UserGroupInformation.setConfiguration(conf)
+        def ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(
+                SecurityUtil.getServerPrincipal(conf.get("dfs.namenode.kerberos.principal"), "0.0.0.0"),
+                keytabPath
+        )
+        setUgi(ugi)
+        ugi.setLoginUser(ugi)
+        log.info("Intialized configuration for HDFS Service. Login user: ${ugi.getLoginUser()}, current user: ${ugi.getCurrentUser()}")
+        setConf(conf)
+    }
+
+    KerberosConnection(List<String> configFiles, String principal, String keytabPath) {
+        log.debug("File paths: " + configFiles )
+        Configuration conf = new Configuration(false)
+
+        configFiles.each {
+            conf.addResource(new HadoopPath(getRealFile(it).toString()))
+        }
+
+        UserGroupInformation.setConfiguration(conf)
+        def ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(
+                SecurityUtil.getServerPrincipal(principal, "0.0.0.0"),
+                keytabPath
+        )
+        setUgi(ugi)
+        ugi.setLoginUser(ugi)
+        log.info("Intialized configuration for HDFS Service. Login user: ${ugi.getLoginUser()}, current user: ${ugi.getCurrentUser()}")
+        setConf(conf)
+    }
+
+    KerberosConnection(List<String> configFiles, String proxyUserPrincipal, String proxyUserKeytabPath, String userPrincipal) {
+        log.debug("File paths: " + configFiles )
+        Configuration conf = new Configuration(false)
+
+        configFiles.each {
+            conf.addResource(new HadoopPath(getRealFile(it).toString()))
+        }
+
+        UserGroupInformation.setConfiguration(conf)
+        def proxyUserUgi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(
+                SecurityUtil.getServerPrincipal(proxyUserPrincipal, "0.0.0.0"),
+                proxyUserKeytabPath
+        )
+        def userViaProxyUgi = UserGroupInformation.createProxyUser(userPrincipal, proxyUserUgi)
+        setUgi(userViaProxyUgi)
+        ugi.setLoginUser(userViaProxyUgi)
+        log.info("Intialized configuration for HDFS Service. Login user: ${userViaProxyUgi.toString()}")
+        setConf(conf)
+    }
 
     static Path getRealFile(String file1) throws IOException {
         return new File(file1).toPath().toRealPath()
