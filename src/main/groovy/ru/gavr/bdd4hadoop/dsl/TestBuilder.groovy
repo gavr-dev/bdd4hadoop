@@ -1,14 +1,14 @@
 package ru.gavr.bdd4hadoop.dsl
 
-import ru.gavr.bdd4hadoop.CallableTest
-import ru.gavr.bdd4hadoop.TestsStorage
-import ru.gavr.bdd4hadoop.dsl.services.Service
-import ru.gavr.bdd4hadoop.exceptions.ServiceIdException
 import groovy.util.logging.Commons
 import org.apache.commons.lang.SerializationUtils
 import org.springframework.beans.factory.ObjectFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import ru.gavr.bdd4hadoop.CallableTest
+import ru.gavr.bdd4hadoop.TestsStorage
+import ru.gavr.bdd4hadoop.dsl.services.Service
+import ru.gavr.bdd4hadoop.exceptions.ServiceIdException
 
 import java.util.stream.Collectors
 

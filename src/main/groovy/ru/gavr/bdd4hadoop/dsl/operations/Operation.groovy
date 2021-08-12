@@ -1,12 +1,12 @@
 package ru.gavr.bdd4hadoop.dsl.operations
 
-import ru.gavr.bdd4hadoop.dsl.services.Service
-import ru.gavr.bdd4hadoop.exceptions.ExpectException
 import groovy.transform.Canonical
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
+import ru.gavr.bdd4hadoop.dsl.services.Service
+import ru.gavr.bdd4hadoop.exceptions.ExpectException
 
 @Canonical
 @Component

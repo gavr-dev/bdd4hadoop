@@ -87,6 +87,7 @@ class KerberosConnection {
     }
 
 
+
     KerberosConnection(boolean fal) {
         Configuration conf = new Configuration(false)
 

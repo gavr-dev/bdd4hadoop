@@ -1,16 +1,12 @@
 package ru.gavr.bdd4hadoop.dsl
 
-import ru.gavr.bdd4hadoop.enums.AuthType
-import ru.gavr.bdd4hadoop.enums.LoginType
-import ru.gavr.bdd4hadoop.enums.ServerMode
-import ru.gavr.bdd4hadoop.enums.ServiceType
-import ru.gavr.bdd4hadoop.enums.TestType
 import groovy.util.logging.Commons
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import ru.gavr.bdd4hadoop.enums.*
 
 @Component
 @Commons
@@ -36,8 +32,10 @@ class Reader {
                 try {
                     def nameA = a.getName().split("\\.",2)[0].toUpperCase()
                     def nameB = b.getName().split("\\.",2)[0].toUpperCase()
-                    fileNumA = Integer.parseInt(nameA.split("_", )[1])
-                    fileNumB = Integer.parseInt(nameB.split("_", )[1])
+                    def aIndex = nameA.contains(TestType.SPARK_WITH_HIVE.typeName.toUpperCase()) ? 3 : 1
+                    def bIndex = nameB.contains(TestType.SPARK_WITH_HIVE.typeName.toUpperCase()) ? 3 : 1
+                    fileNumA = Integer.parseInt(nameA.split("_", )[aIndex])
+                    fileNumB = Integer.parseInt(nameB.split("_", )[bIndex])
                 } catch (Exception ex) {
                     log.error("Error while sorting file. Correct format is TYPE + '_' + NUMBER + '_' + NAME: " + ex.getMessage())
                 }
