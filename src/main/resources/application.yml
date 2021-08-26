@@ -1,8 +1,9 @@
 logging:
   level:
     org:
+      apache: ERROR
+      hibernate: ERROR
       springframework: ERROR
-
 spring:
   devtools:
     restart:

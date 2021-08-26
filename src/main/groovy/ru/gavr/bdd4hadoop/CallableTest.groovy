@@ -30,6 +30,14 @@ class CallableTest {
     @Autowired
     TestResult testResult
 
+    @Autowired
+    private LoadingCache<Service, DriverConnector> driverConnectorPool
+    @Autowired
+    private LoadingCache<Service, JDBCConnector> jdbcConnectorPool
+    @Autowired
+    private LoadingCache<Service, HDFSConnector> hdfsConnectorPool
+    @Autowired
+    private LoadingCache<Service, SparkConnector> sparkConnectorPool
 
     def preconditions() {
         log.info("--- Preconditions processing ---")
@@ -88,7 +96,18 @@ class CallableTest {
         return connector.runQuery(operation.action)
     }
 
-
+    private RunAutotestCommandConnector getConnector(Service service){
+        log.debug("Run \"getConnector\" method")
+        if (service?.getServiceType()?.getServerMode() == ServerMode.JDBC) {
+            return jdbcConnectorPool.get(service)
+        }  else if (service?.getServiceType() == ServiceType.HDFS) {
+            return hdfsConnectorPool.get(service)
+        } else if (service?.getServiceType() == ServiceType.SPARK) {
+            return sparkConnectorPool.get(service)
+        } else {
+            return driverConnectorPool.get(service)
+        }
+    }
 
     def checkConditionResult(result, conditionName, action) {
         if (result.get(0).equals("FAILURE") && !result.get(1).equals("NO ERROR") ) {
