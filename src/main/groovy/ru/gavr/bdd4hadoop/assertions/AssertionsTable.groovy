@@ -1,4 +1,4 @@
-package ru.gavr.bdd4hadoop.utils
+package ru.gavr.bdd4hadoop.assertions
 
 import groovy.transform.Canonical
 import groovy.util.logging.Commons
@@ -6,6 +6,7 @@ import org.apache.commons.collections.CollectionUtils
 import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
+import ru.gavr.bdd4hadoop.connectors.HDFSParquetReader
 
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -217,7 +218,7 @@ class AssertionsTable {
     }
 
     static def tableEquals(List<Map<String, Object>> received, String path) {
-        List<Map<String, Object>> expected = ru.gavr.bdd4hadoop.connectors.hdfs.HDFSParquetReader.readData(path)
+        List<Map<String, Object>> expected = HDFSParquetReader.readData(path)
         return tableEquals(received, expected)
     }
 }

@@ -1,4 +1,4 @@
-package ru.gavr.bdd4hadoop.utils;
+package ru.gavr.bdd4hadoop.assertions;
 
 import groovy.json.JsonOutput;
 import org.junit.jupiter.api.Test;

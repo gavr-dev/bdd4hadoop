@@ -1,4 +1,4 @@
-package ru.gavr.bdd4hadoop.utils
+package ru.gavr.bdd4hadoop.assertions
 
 import com.google.common.primitives.Ints
 import com.google.common.primitives.Longs

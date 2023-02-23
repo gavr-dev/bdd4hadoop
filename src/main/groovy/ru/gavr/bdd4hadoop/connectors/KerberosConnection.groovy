@@ -1,4 +1,4 @@
-package ru.gavr.bdd4hadoop.connectors.utils
+package ru.gavr.bdd4hadoop.connectors
 
 import groovy.io.FileType
 import groovy.util.logging.Commons

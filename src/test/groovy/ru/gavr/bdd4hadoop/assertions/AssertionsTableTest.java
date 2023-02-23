@@ -1,4 +1,4 @@
-package ru.gavr.bdd4hadoop.utils;
+package ru.gavr.bdd4hadoop.assertions;
 
 import org.apache.parquet.tools.read.SimpleRecord;
 import org.junit.jupiter.api.Assertions;

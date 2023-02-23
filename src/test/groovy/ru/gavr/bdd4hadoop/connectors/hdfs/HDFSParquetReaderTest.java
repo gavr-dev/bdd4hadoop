@@ -1,6 +1,7 @@
 package ru.gavr.bdd4hadoop.connectors.hdfs;
 
 import org.junit.jupiter.api.Test;
+import ru.gavr.bdd4hadoop.connectors.HDFSParquetReader;
 
 import java.util.List;
 import java.util.Map;

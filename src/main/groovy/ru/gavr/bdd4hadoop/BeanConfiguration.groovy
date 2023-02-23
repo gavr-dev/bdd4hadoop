@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 import ru.gavr.bdd4hadoop.connectors.DriverConnector
 import ru.gavr.bdd4hadoop.connectors.JDBCConnector
 import ru.gavr.bdd4hadoop.connectors.SparkConnector
-import ru.gavr.bdd4hadoop.connectors.hdfs.HDFSConnector
+import ru.gavr.bdd4hadoop.connectors.HDFSConnector
 import ru.gavr.bdd4hadoop.dsl.services.Service
 
 @Configuration

@@ -6,8 +6,8 @@ import groovy.util.logging.Commons
 import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import ru.gavr.bdd4hadoop.utils.Assertions
-import ru.gavr.bdd4hadoop.utils.AssertionsTable
+import ru.gavr.bdd4hadoop.assertions.Assertions
+import ru.gavr.bdd4hadoop.assertions.AssertionsTable
 
 @Canonical
 @Component
