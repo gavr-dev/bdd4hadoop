@@ -1,4 +1,9 @@
-# Bdd4Hadoop
+<h1 align="center">Bdd4Hadoop</h1>
+<p align="center">
+<img src="https://img.shields.io/github/last-commit/gavr-dev/bdd4hadoop"/>
+<a href="https://github.com/gavr-dev/bdd4hadoop/tags" alt="Tag"><img src="https://img.shields.io/github/v/tag/gavr-dev/bdd4hadoop"/></a>
+<a href="https://github.com/gavr-dev/bdd4hadoop/blob/main/LICENSE" alt="GPLv3 licensed"><img src="https://img.shields.io/badge/license-GPLv3-blue"/></a>
+</p>
 
 **Bdd4Hadoop** is a framework designed to create behaviour-driven development-style automated tests specifically for **Apache Hadoop**.
 It includes a custom domain-specific language (**DSL**) based on Groovy, facilitating test writing.
